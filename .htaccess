@@ -1,0 +1,18 @@
+<IfModule mod_headers.c>
+Header always set Strict-Transport-Security: "max-age=31536000; includeSubDomains; preload" env=HTTPS
+</IfModule>
+
+SetEnvIf Origin "http(s)?://(.+\.)?ezdg\.ca(:\d{1,5})?$" CORS=$0
+Header set Access-Control-Allow-Origin "%{CORS}e" env=CORS
+Header merge  Vary "Origin"
+
+ErrorDocument 403 /403.php
+ErrorDocument 404 /404.php
+ErrorDocument 500 /500.php
+
+RewriteEngine on
+RewriteCond %{HTTP_HOST} ^ezdg\.ca$
+RewriteRule ^(.*)$ "https\:\/\/www\.ezdg\.ca\/$1" [R=301,L]
+
+RewriteRule ^core/?(.*)$ - [F,L]
+RewriteRule ^templates/?(.*)$ - [F,L]
