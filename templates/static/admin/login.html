@@ -1,0 +1,44 @@
+<div class="login">
+<div>
+<div class="logo"><img src="%%ASSET_DOMAIN%%/images/wms_logo.png" alt="WMS Logo"></div>
+<div class="box">
+<div class="login_error_title">Message<span class="not_bold">:: Loading..</span></div>
+<noscript><div id="jswarning"><b>Error</b>:: Javascript is required to access.</div></noscript>
+<form id="login">
+<div class="login_surround">
+<div style="text-align:center;"><div class="loading"></div></div>
+<div class="jscontent">
+<div class="spinning_load"><div class="pulsing-load"></div><div class="auth_text">Authenticating</div></div>
+<div id="login_message" class="failed">Invalid username or password</div>
+<div class="input_row">
+<span class="title">Username:</span>
+<input id="usernme" type="text" placeholder="Username / E-Mail" value="%%VAR1%%" disabled>
+<span class="addon"><i class="glyphicon glyphicon-user"></i></span>
+</div>
+<div class="input_row">
+<span class="title">Password:</span>
+<input id="passwrd" type="password" placeholder="Password" value="" disabled>
+<span class="addon"><i class="glyphicon glyphicon-lock"></i></span>
+</div>
+<div class="input_row"><div class="remember">
+<label class="remember_container">Save my login details
+<input id="remember_me" type="checkbox" %%VAR2%%disabled>
+<span class="checkmark"></span>
+</label>
+</div></div>
+<div class="input_row">
+<div class="login_button">
+<button type="button" id="login_button">Login to account</button>
+</div>
+</div>
+</div>
+</div>
+</form>
+</div>
+<div class="copyright">Copyright &copy;%%YEAR%% %%AUTHOR%%<br><a href="https://directweb.solutions/wms" target="_blank" title="Find out more about WMS Portal from Direct Web Solutions">Powered by WMS Portal</a></div>
+</div>
+<div class="top"></div>
+</div>
+<script>
+$(document).ready(function(){function refresh(){$(".auth_text").text("Redirecting...");var redirect = setTimeout(reload,900);}function reload(){location.reload();}function showerror(){$("#login :input").prop("disabled",false);$(".spinning_load").fadeOut(function(a){$("#login_message").slideDown();});}$(".not_bold").text(":: Login to continue");$(".loading").fadeOut(function(b){$("#login :input").prop("disabled",false);$(".jscontent").fadeIn();});$("#usernme").keypress(function(event){if(event.keyCode === 13){$("#login_button").click();}});$("#passwrd").keypress(function(event){if(event.keyCode === 13){$("#login_button").click();}});$("#login_button").on("click",function(form){form.preventDefault();var username = $("#usernme").val();username = $.trim(username);var password = $("#passwrd").val();var remember_me = $("#remember_me").prop('checked');if(username.length < 5 || password.length < 8){$("#login_message").slideDown();}else{var formData = $("#login").serializeArray();$("#login_message").slideUp();$(".spinning_load").fadeIn(function(c){$("#login :input").prop("disabled",true);$("#login_message").text("Javscript Error.");formData.push({name:"login",value:"true"});formData.push({name:"username",value:username});formData.push({name:"password",value:password});formData.push({name:"remember",value:remember_me});var login_message = "";$.ajax({async:true,type:"POST",url:"https:%%DOMAIN%%/process.php?action=login",data:formData,cache:false}).done(function(evt){$(".auth_text").text('Redirecting...');var redirect = setTimeout(refresh, 900);}).fail(function(response){login_message = response.responseText;statuscode = response.status;if(statuscode == "403"){login_message = "Invalid username or password.";}$("#login_message").text(login_message);var updateDisplay = setTimeout(showerror,900);});});}});});
+</script>
